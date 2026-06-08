@@ -1,0 +1,21 @@
+# M1 Mac compatible — no CUDA, uses Apple MPS / CPU
+
+# Core vision
+opencv-python==4.9.0.80
+numpy==1.26.4
+Pillow==10.3.0
+
+# Vehicle detection
+ultralytics==8.2.18          # YOLOv8 — has M1 MPS support
+
+# License plate OCR
+paddlepaddle==2.6.1          # M1 ARM build available
+paddleocr==2.7.3
+
+# Face detection + embeddings
+insightface==0.7.3
+onnxruntime==1.18.0          # CPU version for M1 (no onnxruntime-gpu)
+
+# Utils
+loguru==0.7.2
+rich==13.7.1                 # pretty terminal output

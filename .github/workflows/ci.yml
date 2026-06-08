@@ -1,0 +1,117 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── Backend tests ─────────────────────────────────────────────
+  backend:
+    name: Backend — lint + test
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: intelligate
+          POSTGRES_PASSWORD: ci_test_password
+          POSTGRES_DB: intelligate_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    defaults:
+      run:
+        working-directory: smart-access-full/backend
+
+    env:
+      DATABASE_URL: postgresql+asyncpg://intelligate:ci_test_password@localhost:5432/intelligate_test
+      REDIS_URL: redis://localhost:6379/0
+      JWT_SECRET: ci_jwt_secret_not_used_in_production_at_all
+      APP_SECRET_KEY: ci_app_secret_not_used_in_production
+      APP_ENV: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: smart-access-full/backend/requirements.txt
+
+      - name: Install dependencies
+        run: pip install --upgrade pip && pip install -r requirements.txt pytest pytest-asyncio
+
+      - name: Lint with ruff (non-blocking)
+        run: pip install ruff && ruff check . --output-format=github || true
+
+      - name: Run tests
+        run: pytest tests/ -v --tb=short
+
+  # ── AI Engine — import smoke test ─────────────────────────────
+  ai-engine:
+    name: AI Engine — dependency check
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: Ai engine
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: Ai engine/requirements.txt
+
+      - name: Install non-vision dependencies
+        run: |
+          pip install --upgrade pip
+          pip install python-dotenv loguru rich httpx
+
+      - name: Verify config.env.example exists
+        run: test -f config.env.example
+
+      - name: Check no hardcoded secrets in source
+        run: |
+          if grep -rn "FACILITY_API_KEY\s*=\s*['\"][^'\"\$]" live_pipeline.py send_to_backend.py 2>/dev/null; then
+            echo "ERROR: Hardcoded API key detected in source!"
+            exit 1
+          fi
+          echo "No hardcoded secrets found."
+
+  # ── Secret scanning ───────────────────────────────────────────
+  secret-scan:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Scan for secrets with gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

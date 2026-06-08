@@ -1,0 +1,6 @@
+cat > "/Users/apple/AI Proj/BLP Ai proj/smart-access-full/backend/.dockerignore" << 'EOF'
+venv/
+__pycache__/
+*.pyc
+.env
+EOF

@@ -1,0 +1,92 @@
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pycache
+
+# ─── Virtual environments ─────────────────────────────────────────────────────
+venv/
+.venv/
+env/
+ENV/
+
+# ─── Secrets & credentials — NEVER commit these ───────────────────────────────
+.env
+.env.*
+!.env.example
+# config.env* catches "config.env", "config.env " (trailing space), "config.env.local", etc.
+config.env*
+!config.env.example
+*.env
+secrets/
+*.secret
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.cer
+ngrok.yml
+.ngrok/
+
+# ─── Personal / biometric data ────────────────────────────────────────────────
+my_face_embedding.json
+*.face_embedding.json
+*.embedding.json
+captures/
+# Any JSON that looks like it stores embeddings or personal records
+face_data/
+biometric/
+
+# ─── Large ML model files ─────────────────────────────────────────────────────
+*.pt
+*.pth
+*.onnx
+*.bin
+*.safetensors
+*.pkl
+*.h5
+
+# ─── macOS ────────────────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# ─── Celery ───────────────────────────────────────────────────────────────────
+celerybeat-schedule
+celerybeat.pid
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ─── Docker ───────────────────────────────────────────────────────────────────
+*.override.yml
+
+# ─── IDE ──────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ─── Build artifacts ──────────────────────────────────────────────────────────
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ─── Testing / coverage ───────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# ─── Jupyter ──────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ─── Misc ─────────────────────────────────────────────────────────────────────
+*.tmp
+*.bak
