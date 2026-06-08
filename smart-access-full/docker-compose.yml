@@ -52,7 +52,9 @@ services:
     volumes:
       - ./backend:/app
       - captures_data:/app/captures
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    command: >
+      sh -c "alembic upgrade head &&
+             uvicorn main:app --host 0.0.0.0 --port 8000"
 
   celery_worker:
     build:

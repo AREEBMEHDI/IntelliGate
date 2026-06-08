@@ -1,5 +1,6 @@
 # IntelliGate
 
+[![CI](https://github.com/AREEBMEHDI/IntelliGate/actions/workflows/ci.yml/badge.svg)](https://github.com/AREEBMEHDI/IntelliGate/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)](https://postgresql.org)

@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     twilio_account_sid: str = ""
     twilio_auth_token: str = ""
     twilio_from_number: str = ""
+    alert_sms_to: str = ""
     sendgrid_api_key: str = ""
     alert_email_from: str = ""
 
